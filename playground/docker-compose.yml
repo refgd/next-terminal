@@ -1,32 +1,36 @@
 version: '3.3'
+networks:
+    1panel-network:
+        external: true
 services:
   guacd:
     image: dushixiang/guacd:latest
     environment:
       GUACD_LOG_LEVEL: debug
+    networks:
+      - 1panel-network
     volumes:
       - ../data:/usr/local/next-terminal/data
-    ports:
-      - "4822:4822"
-    restart:
-      always
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_DATABASE: next-terminal
-      MYSQL_USER: next-terminal
-      MYSQL_PASSWORD: next-terminal
-      MYSQL_ROOT_PASSWORD: next-terminal
-    volumes:
-      - ../data/mysql:/var/lib/mysql
-    ports:
-      - "3306:3306"
     restart:
       always
 
-networks:
   next-terminal:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.77.77.0/24
+    build: ../
+    environment:
+      DB: mysql
+      MYSQL_HOSTNAME: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USERNAME: next-terminal
+      MYSQL_PASSWORD: next-terminal
+      MYSQL_DATABASE: next-terminal
+      GUACD_HOSTNAME: guacd
+      GUACD_PORT: 4822
+    networks:
+      - 1panel-network
+    ports:
+      - "8088:8088"
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ../data:/usr/local/next-terminal/data
+    restart:
+      always
