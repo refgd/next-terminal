@@ -254,6 +254,9 @@ const AssetModal = function ({
                 {
                     accountType === 'credential' ?
                         <>
+                            <Form.Item label="授权账户" name='username'>
+                                <Input autoComplete="off" placeholder="输入授权账户"/>
+                            </Form.Item>
                             <Form.Item label="授权凭证" name='credentialId'
                                        rules={[{required: true, message: '请选择授权凭证'}]}>
                                 <Select onChange={() => null}>

@@ -234,7 +234,6 @@ func (s assetService) UpdateById(id string, m maps.Map) error {
 
 	switch item.AccountType {
 	case "credential":
-		item.Username = "-"
 		item.Password = "-"
 		item.PrivateKey = "-"
 		item.Passphrase = "-"

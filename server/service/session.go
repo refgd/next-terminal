@@ -357,7 +357,9 @@ func (service sessionService) Create(clientIp, assetId, mode string, user *model
 			s.Username = credential.Username
 			s.Password = credential.Password
 		} else {
-			s.Username = credential.Username
+			if s.Username == "" || s.Username == "-" {
+				s.Username = credential.Username
+			}
 			s.PrivateKey = credential.PrivateKey
 			s.Passphrase = credential.Passphrase
 		}

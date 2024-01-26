@@ -87,7 +87,9 @@ func (r ShellJob) executeShellByAssets(assets []model.Asset) {
 				username = credential.Username
 				password = credential.Password
 			} else {
-				username = credential.Username
+				if username == "" || username == "-" {
+					username = credential.Username
+				}
 				privateKey = credential.PrivateKey
 				passphrase = credential.Passphrase
 			}
