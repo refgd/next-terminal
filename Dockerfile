@@ -2,16 +2,13 @@ FROM node:16-alpine AS builder-web
 
 WORKDIR /app
 COPY ./web/ ./
-    
-RUN npm install
-RUN npm run build
 
+RUN yarn
+RUN yarn build
 
 
 FROM golang:alpine as builder
-
 ENV GO111MODULE=on
-
 ENV GOPROXY=https://goproxy.cn,direct
 
 WORKDIR /app
@@ -27,9 +24,8 @@ RUN echo "Hello, my CPU architecture is $(uname -m)"
 RUN go env;CGO_ENABLED=0 GOOS=linux GOARCH=$ARCH go build -ldflags '-s -w' -o next-terminal main.go
 RUN #upx next-terminal
 
-FROM alpine:latest
 
-LABEL MAINTAINER="helloworld1024@foxmail.com"
+FROM alpine:latest
 
 ENV TZ Asia/Shanghai
 ENV DB sqlite
@@ -44,7 +40,6 @@ RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /
 WORKDIR /usr/local/next-terminal
 RUN touch config.yml
 
-COPY --from=builder /app/server/resource ./
 COPY --from=builder /app/next-terminal ./
 COPY --from=builder /app/LICENSE ./
 

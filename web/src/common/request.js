@@ -28,8 +28,7 @@ const handleResult = (result) => {
   if (result['code'] === 401) {
     window.location.href = '#/login';
     return false;
-  }
-  if (result['code'] === 403) {
+  } else if (result['code'] === 403) {
     window.location.href = '#/permission-denied';
     return false;
   } else if (result['code'] === 100) {
@@ -46,19 +45,13 @@ const request = {
     const headers = getHeaders();
 
     return new Promise((resolve, reject) => {
-      fetch(url, { headers })
+      axios.get(url, { headers: headers })
         .then((response) => {
-          let contentType = response.headers.get('content-type');
+          let contentType = response.headers['content-type'];
           if (contentType !== '' && contentType.includes('application/json')) {
-            return response.json();
+            handleResult(response.data);
           }
-          return response.text();
-        })
-        .then((result) => {
-          if (typeof result === 'object') {
-            handleResult(result);
-          }
-          resolve(result);
+          resolve(response.data);
         })
         .catch((error) => {
           if (!handleError(error)) {
